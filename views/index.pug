@@ -2,3 +2,14 @@ extends layout
 
 block content
   h1 Opera Inventory
+
+  ul
+    if opera_list 
+      li Operas: #{opera_list.length}
+    if composer_list 
+      li Composers: #{composer_list.length} 
+    if aria_list 
+      li Arias: #{aria_list.length}
+    
+          
+      

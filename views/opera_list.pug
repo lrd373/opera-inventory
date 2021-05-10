@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1 All Operas
+
+  if opera_list 
+    ul
+      each opera in opera_list 
+        li
+          a(href= opera.url) #{opera.name}
+          |  by 
+          a(href= opera.composer.url) #{opera.composer.fullname}
+  else 
+    p There are no composers in our database.

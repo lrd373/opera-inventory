@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1 #{opera.name}
+  if opera.number_of_acts 
+    h2 An Opera in #{opera.number_of_acts} Acts by 
+      a(href= opera.composer.url) #{opera.composer.fullname} 
+  if opera.premiere_date
+    p Premiered: #{opera.premiere_date_local}
+  if opera.language 
+    p Language: #{opera.language}
+  if opera.synopsis
+    h3 Synopsis:
+    p.synopsis= opera.synopsis
+
+  if aria_list 
+    h2 Arias from this opera 
+    ul 
+      each aria in aria_list 
+        li 
+          a(href= aria.url) #{aria.name}
+
+
+
+

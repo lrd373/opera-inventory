@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= composer.fullname
+
+  if composer.birth_date && composer.death_date
+    p= composer.birth_date_local + ' - ' + composer.death_date_local
+  else if composer.birth_date
+    p= 'Born: ' + composer.birth_date_local
+  else if composer.death_date 
+    p= 'Died: ' + composer.death_date_local
+
+  if opera_list 
+    h2 Operas: 
+    ul 
+      each opera in opera_list 
+        li 
+          a(href= opera.url) #{opera.name} 

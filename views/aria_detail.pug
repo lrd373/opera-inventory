@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1 #{aria.name}
+  if aria.nickname 
+    h3 aka #{aria.nickname}
+  h2 from 
+    a(href= aria.opera.url) #{aria.opera.name} 
+    | by 
+    a(href= aria.opera.composer.url) #{aria.opera.composer.fullname} 
+  if aria.act_number 
+    h3 Act #{aria.act_number}
+    if aria.scene_number 
+      | Scene #{aria.scene_number} 
+  if aria.character_name 
+    h3 Sung by #{aria.character_name}
+  if aria.voice_type 
+    h3 Aria for #{aria.voice_type}
+  if aria.language 
+    h3 Language: #{aria.language}
+  if aria.description 
+    h3 Description: 
+    p= aria.description
+
+
