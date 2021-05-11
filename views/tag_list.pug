@@ -1,0 +1,10 @@
+extends layout 
+
+block content 
+  h1 Search by Opera and Aria Types 
+  
+  if tag_list && tag_list.length > 0
+    .tagsContainer
+      each tag in tag_list 
+        .tagButton
+          a(href=tag.url) #{tag.name}

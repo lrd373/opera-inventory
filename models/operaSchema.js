@@ -10,7 +10,7 @@ const OperaSchema = new Schema({
     language: {type: String},
     number_of_acts: {type: Number},
     synopsis: {type: String},
-    // opera_tags not implemented
+    tags: [{type: Schema.Types.ObjectId, ref: 'Tags'}]
 });
 
 // Virtual for opera detail url
@@ -26,6 +26,17 @@ OperaSchema
 .get(function(){
     if (this.premiere_date) {
         return DateTime.fromJSDate(this.premiere_date).toLocaleString(DateTime.DATE_MED);
+    } else {
+        return "No premiere date specified";
+    }
+});
+
+// Virtual for premiere date formatted for form
+OperaSchema
+.virtual('premiere_date_form')
+.get(function(){
+    if (this.premiere_date) {
+        return DateTime.fromJSDate(this.premiere_date).toFormat('yyyy-MM-dd');
     } else {
         return "No premiere date specified";
     }

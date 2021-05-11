@@ -4,20 +4,53 @@ block content
 
   .formContainer 
     h1= title 
-    form(action="/create/opera" method="POST")
-      label(for="operaName") Opera Name: 
-      input(id="operaName" name="operaName" type="text" required placeholder="e.g. Madama Butterfly")
+    form(action=action method="POST")
+      label(for="name") Opera Name: 
+      input(
+        id="name" 
+        name="name" 
+        type="text" 
+        placeholder="e.g. Madama Butterfly"
+        value=(inputs===undefined ? "" : inputs.name)
+      )
       label(for="composer") Composer: 
       select(id="composer" name="composer" required)
         each composer in composer_list
-          option(value=composer._id) #{composer.fullname}
+          option(
+            value=composer._id
+            selected=(inputs!==undefined && composer._id.toString()===inputs.composer.toString() ? true : false)
+          ) #{composer.fullname}
       a(class="addComposerMsg" href="/create/composer") Click here to add a new composer.
-      label(for="premiereDate") Opera Premiere Date: 
-      input(id="premierDate" name="premiereDate" type="date" placeholder="mm/dd/yyyy")
+      label(for="premiere_date") Opera Premiere Date: 
+      input(
+        id="premiere_Date" 
+        name="premiere_date" 
+        type="date" 
+        placeholder="mm/dd/yyyy"
+        value=(inputs===undefined ? "" : inputs.premiere_date_form)
+      )
       label(for="language") Original Language: 
-      input(id="language" name="language" type="text" placeholder="e.g. Italian")
-      label(for="numberActs") Number of Acts: 
-      input(id="numberActs" name="numberActs" type="number" placeholder="e.g. 3")
-      label(for="synopsis") Brief Synopsis: 
-      textarea(id="synopsis" name="synopsis", cols="30", rows="10")
+      input(
+        id="language" 
+        name="language" 
+        type="text" 
+        placeholder="e.g. Italian"
+        value=(inputs===undefined ? "" : inputs.language)
+      )
+      label(for="number_of_acts") Number of Acts: 
+      input(
+        id="number_of_acts" 
+        name="number_of_acts" 
+        type="number" 
+        placeholder="e.g. 3"
+        value=(inputs===undefined ? "" : inputs.number_of_acts)
+      )
+      label(for="synopsis") Synopsis: 
+      textarea(
+        id="synopsis" 
+        name="synopsis"
+        cols="30"
+        rows="10"
+        value=(inputs===undefined ? "" : inputs.synopsis)
+      )
       input(type="submit" value="Submit")

@@ -28,6 +28,17 @@ ComposerSchema
     }
 });
 
+// Virtual for form birth date format
+ComposerSchema
+.virtual('birth_date_form')
+.get(function() {
+    if (this.birth_date) {
+        return DateTime.fromJSDate(this.birth_date).toFormat('yyyy-MM-dd');
+    } else {
+        return "There is no birth date";
+    }
+});
+
 // Virtual for nicely formatted death date
 ComposerSchema
 .virtual('death_date_local')
@@ -36,6 +47,17 @@ ComposerSchema
         return DateTime.fromJSDate(this.death_date).toLocaleString(DateTime.DATE_MED);
     } else {
         return "No date of death";
+    }
+});
+
+// Virtual for form death date format
+ComposerSchema
+.virtual('death_date_form')
+.get(function() {
+    if (this.death_date) {
+        return DateTime.fromJSDate(this.death_date).toFormat('yyyy-MM-dd');
+    } else {
+        return "There is no death date";
     }
 });
 

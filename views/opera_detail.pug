@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  h1 #{opera.name}
-  if opera.number_of_acts 
-    h2 An Opera in #{opera.number_of_acts} Acts by 
-      a(href= opera.composer.url) #{opera.composer.fullname} 
+  h1 #{opera.name} 
+  h2 An Opera 
+    if opera.number_of_acts
+      | in #{opera.number_of_acts} Acts 
+    | by 
+    a(href= opera.composer.url) #{opera.composer.fullname} 
   if opera.premiere_date
     p Premiered: #{opera.premiere_date_local}
   if opera.language 
@@ -20,6 +22,9 @@ block content
         li 
           a(href= aria.url) #{aria.name}
   a(href="/create/aria") Add Aria 
+  hr
+  a(href="/update"+opera.url) Update this opera 
+  a(href="/delete"+opera.url) Delete this Opera 
 
 
 

@@ -1,0 +1,12 @@
+extends layout 
+
+block content 
+
+  h1 Category: #{tag.name} 
+
+  if opera_list && opera_list.length > 0
+    ul.tagList
+    each opera in opera_list 
+      li 
+        a(href=opera.url) #{opera.name} 
+        | by #{opera.composer.fullname}

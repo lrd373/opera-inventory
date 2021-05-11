@@ -1,0 +1,77 @@
+extends layout 
+
+block content 
+
+  .formContainer 
+    h1= title 
+    if errors 
+      each error in errors
+        p= error.msg
+    form(action="/create/aria" method="POST")
+      label(for="ariaName") Aria Name: 
+      input(
+        id="ariaName" 
+        name="ariaName" 
+        type="text" 
+        value=(inputs===undefined ? "" : inputs.ariaName) 
+        placeholder="e.g. Obéissons quand leur voix appelle"
+      )
+      label(for="nickname") Commonly called: 
+      input(
+        id="nickname" 
+        name="nickname" 
+        type="text"
+        placeholder="e.g. Manon's Gavotte" 
+        value=(inputs===undefined ? "" : inputs.nickname)
+      )
+      label(for="opera") Opera: 
+      select(id="opera" name="opera" required)
+        each opera in opera_list
+              option(
+                value=opera._id
+                selected=(inputs!==undefined && inputs.opera===opera._id ? true : false)
+              ) #{opera.name} by #{opera.composer.fullname}
+      a(class="addOperaMsg" href="/create/opera") Click here to add a new opera.
+      label(for="characterName") Character who sings this piece: 
+      input(
+        type="text" 
+        id="characterName" 
+        name="characterName" 
+        placeholder="e.g. Manon Lescaut"
+        value=(inputs===undefined ? "" : inputs.characterName)
+      )
+      label(for="actNumber") Act Number: 
+      input(id="actNumber" name="actNumber" type="number" value=(inputs===undefined ? "" : inputs.actNumber))
+      label(for="sceneNumber") Scene Number: 
+      input(id="sceneNumber" name="sceneNumber" type="number" value=(inputs===undefined ? "" : inputs.sceneNumber))
+      label(for="language") Language: 
+      input(id="language" name="language" type="text" value=(inputs===undefined ? "" : inputs.language))
+      label(for="voiceType") Voice Type: 
+      select(id="voiceType" name="voiceType")
+        option(value="Soprano" 
+          selected=(inputs!==undefined && inputs.voiceType==="Soprano" ? true: false)
+        ) Soprano 
+        option(value="Mezzo-Soprano" 
+          selected=(inputs!==undefined && inputs.voiceType==="Mezzo-Soprano" ? true: false)
+        ) Mezzo-Soprano 
+        option(value="Contralto"
+          selected=(inputs!==undefined && inputs.voiceType==="Contralto" ? true: false)
+        ) Contralto 
+        option(value="Counter-Tenor"
+          selected=(inputs!==undefined && inputs.voiceType==="Counter-Tenor" ? true: false)
+        ) Counter-Tenor 
+        option(value="Tenor"
+          selected=(inputs!==undefined && inputs.voiceType==="Tenor" ? true: false)
+        ) Tenor 
+        option(value="Baritone"
+          selected=(inputs!==undefined && inputs.voiceType==="Baritone" ? true: false)
+        ) Baritone 
+        option(value="Bass-Baritone"
+          selected=(inputs!==undefined && inputs.voiceType==="Bass-Baritone" ? true: false)
+        ) Bass-Baritone 
+        option(value="Bass"
+          selected=(inputs!==undefined && inputs.voiceType==="Bass" ? true: false)
+        ) Bass  
+      label(for="ariaDescription") Brief description of the scene: 
+      textarea(id="ariaDescription" name="ariaDescription", cols="30", rows="10" value=(inputs===undefined ? "" : inputs.ariaDescription))
+      input(type="submit" value="Submit")
