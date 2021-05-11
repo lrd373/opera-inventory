@@ -1,12 +1,129 @@
 body {
-  padding: 50px;
+  background-color: #ead3cb;
+  padding: 0;
+  margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+  color: #4392a1;
+  text-decoration: none;
 }
 
-.composerName {
-  font-weight: lighter;
+a:hover {
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+/* *********************** HEADER ************************** */
+
+header {
+  background-color: #845460;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  align-items: baseline;
+  padding: 10px;
+}
+
+.logo {
+  grid-column: 1/4;
+}
+
+.navList {
+  display: flex;
+  grid-column: 4/11;
+  justify-content: flex-end;
+}
+
+.navListItem {
+  margin: 0 8px;
+  position: relative;
+  bottom: 0;
+  transition: bottom 0.5s ease-in-out;
+}
+
+.navListItem:hover {
+  bottom: 10px;
+}
+
+.navListItem a {
+  color: black;
+  font-size: 1.1rem;
+  position: relative;
+  text-decoration: none;
+  
+}
+
+/* ********************** INDEX PAGE ************************** */
+
+.indexContent {
+  text-align: center;
+}
+
+.indexInfoContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.indexInfoCard {
+  background-color: #2b4f60;
+  color: #bdc7c9;
+  display: inline;
+  font-size: 1.5rem;
+  padding: 15px 10px 10px;
+  width: 25%;
+}
+
+.indexInfo {
+  margin: 8px 0;
+}
+
+
+/* ******************* LIST PAGES ************************* */
+
+.listContent {
+  padding: 25px;
+}
+
+.categoryListTitle {
+
+}
+
+.categoryList {
+  list-style: circle;
+}
+
+.categoryListItem {
+  font-size: 1.25rem;
+}
+
+.composerDates {
+  font-size: 1rem;
+}
+
+
+
+/* ******************* DETAIL PAGES ************************* */
+
+/* ******************* FORM PAGES ************************* */
+
+.formContainer {
+  padding: 25px;
+}
+
+form > * {
+  display: block;
+  margin: 10px 0;
+}
+
+label {
+  font-size: 1.25rem;
+}
+
+.addComposerMsg {
+  display: inline;
 }

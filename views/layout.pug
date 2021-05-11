@@ -4,14 +4,17 @@ html
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    ul 
-      li 
-        a(href="/") Home
-      li 
-        a(href="/operas") All operas
-      li 
-        a(href="/composers") All Composers
-      li 
-        a(href="/arias") All Arias 
+    header
+      h1.logo 
+        a(href="/") Opera Inventory
+      ul.navList 
+        li.navListItem
+          a(href="/") Home
+        li.navListItem 
+          a(href="/operas") Operas
+        li.navListItem 
+          a(href="/composers") Composers
+        li.navListItem 
+          a(href="/arias") Arias 
 
     block content

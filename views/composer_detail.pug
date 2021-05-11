@@ -10,9 +10,10 @@ block content
   else if composer.death_date 
     p= 'Died: ' + composer.death_date_local
 
+  h2 Operas:
   if opera_list 
-    h2 Operas: 
     ul 
       each opera in opera_list 
         li 
           a(href= opera.url) #{opera.name} 
+  a(href="/create/opera") Add opera

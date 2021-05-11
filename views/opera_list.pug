@@ -1,14 +1,16 @@
 extends layout
 
 block content
-  h1 All Operas
-
-  if opera_list 
-    ul
-      each opera in opera_list 
-        li
-          a(href= opera.url) #{opera.name}
-          |  by 
-          a(href= opera.composer.url) #{opera.composer.fullname}
-  else 
-    p There are no composers in our database.
+  .listContent
+    h1.categoryListTitle All Operas
+  
+    if opera_list 
+      ul.categoryList
+        each opera in opera_list 
+          li.categoryListItem
+            a(href= opera.url) #{opera.name}
+            |  by 
+            a(href= opera.composer.url) #{opera.composer.fullname}
+    else 
+      p There are no composers in our database.
+    a(href="/create/opera") Add Opera 

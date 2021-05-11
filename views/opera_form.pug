@@ -1,0 +1,23 @@
+extends layout 
+
+block content 
+
+  .formContainer 
+    h1= title 
+    form(action="/create/opera" method="POST")
+      label(for="operaName") Opera Name: 
+      input(id="operaName" name="operaName" type="text" required placeholder="e.g. Madama Butterfly")
+      label(for="composer") Composer: 
+      select(id="composer" name="composer" required)
+        each composer in composer_list
+          option(value=composer._id) #{composer.fullname}
+      a(class="addComposerMsg" href="/create/composer") Click here to add a new composer.
+      label(for="premiereDate") Opera Premiere Date: 
+      input(id="premierDate" name="premiereDate" type="date" placeholder="mm/dd/yyyy")
+      label(for="language") Original Language: 
+      input(id="language" name="language" type="text" placeholder="e.g. Italian")
+      label(for="numberActs") Number of Acts: 
+      input(id="numberActs" name="numberActs" type="number" placeholder="e.g. 3")
+      label(for="synopsis") Brief Synopsis: 
+      textarea(id="synopsis" name="synopsis", cols="30", rows="10")
+      input(type="submit" value="Submit")

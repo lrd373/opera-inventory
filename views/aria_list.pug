@@ -1,14 +1,15 @@
 extends layout
 
 block content
-  h1 All Arias
-
-  if aria_list 
-    ul
-      each aria in aria_list 
-        li
-          a(href= aria.url) #{aria.name} from #{aria.opera.name}
-          |  by 
-          a(href=aria.opera.composer.url) #{aria.opera.composer.fullname}
-  else 
-    p There are no arias in our database.
+  .listContent
+    h1.categoryListTitle All Arias
+  
+    if aria_list 
+      ul.categoryList
+        each aria in aria_list 
+          li.categoryListItem
+            a(href= aria.url) #{aria.name} from #{aria.opera.name}
+            |  by 
+            a(href=aria.opera.composer.url) #{aria.opera.composer.fullname}
+    else 
+      p There are no arias in our database.

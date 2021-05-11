@@ -1,0 +1,16 @@
+extends layout 
+
+block content 
+  h1= title 
+
+  .formContainer 
+    form(action="/create/composer" method="POST")
+      label(for="firstName") Composer's First Name: 
+      input(id="firstName" name="firstName" type="text" required placeholder="e.g. Gioachino")
+      label(for="lastName") Composer's Last Name: 
+      input(id="lastName" name="lastName" type="text" required placeholder="e.g. Rossini")
+      label(for="birthDate") Composer's Birth Date: 
+      input(id="birthDate" name="birthDate" type="date" placeholder="mm/dd/yyyy")
+      label(for="deathDate") Composer's Date of Death: 
+      input(id="deathDate" name="deathDate" type="date" placeholder="mm/dd/yyyy")
+      input(type="submit" name="submit" value="Submit")    

@@ -1,15 +1,21 @@
 extends layout
 
 block content
-  h1 Opera Inventory
-
-  ul
-    if opera_list 
-      li Operas: #{opera_list.length}
-    if composer_list 
-      li Composers: #{composer_list.length} 
-    if aria_list 
-      li Arias: #{aria_list.length}
+  .indexContent
+    h1 In our Database:
+    .indexInfoContainer
+      if opera_list 
+        .indexInfoCard 
+          a(class="indexInfo" href="/operas") Operas: 
+          p(class="indexInfo infoCount")= opera_list.length
+      if composer_list 
+        .indexInfoCard 
+          a(class="indexInfo" href="/composers") Composers: 
+          p(class="indexInfo infoCount")= composer_list.length 
+      if aria_list 
+        .indexInfoCard
+          a(class="indexInfo" href="/arias") Arias:
+          p(class="indexInfo infoCount")= aria_list.length
     
           
       

@@ -13,12 +13,13 @@ block content
     h3 Synopsis:
     p.synopsis= opera.synopsis
 
+  h2 Arias from this opera 
   if aria_list 
-    h2 Arias from this opera 
     ul 
       each aria in aria_list 
         li 
           a(href= aria.url) #{aria.name}
+  a(href="/create/aria") Add Aria 
 
 
 
