@@ -4,6 +4,9 @@ block content
 
   .formContainer 
     h1= title 
+    if errors 
+      each error in errors 
+        p= error.msg
     form(action=action method="POST")
       label(for="name") Opera Name: 
       input(
@@ -45,6 +48,18 @@ block content
         placeholder="e.g. 3"
         value=(inputs===undefined ? "" : inputs.number_of_acts)
       )
+      fieldset      
+        legend Tags:
+          if tag_list && tag_list.length > 0
+            each tag in tag_list 
+              input(
+                type="checkbox" 
+                name="tags" 
+                value=tag._id 
+                id=tag.name+tag._id
+                checked=(inputs!==undefined && inputs.tags.includes(tag._id) ? true : false)
+              )
+              label(for=tag.name+tag._id)= tag.name       
       label(for="synopsis") Synopsis: 
       textarea(
         id="synopsis" 

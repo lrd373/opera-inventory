@@ -44,10 +44,10 @@ router.get('/composers', composerController.list_get);
 // GET composer detail page
 router.get('/composer/:id', composerController.detail_get);
 
-// GET composer form page
+// GET composer create page
 router.get('/create/composer', composerController.create_get);
 
-// POST composer form page
+// POST composer create page
 router.post('/create/composer', composerController.create_post);
 
 // GET composer delete page
@@ -83,6 +83,12 @@ router.get('/delete/aria/:id', ariaController.delete_get);
 // POST to aria delete page
 router.post('/delete/aria/:id', ariaController.delete_post);
 
+// GET aria update page
+router.get('/update/aria/:id', ariaController.update_get);
+
+// POST to aria update page
+router.post('/update/aria/:id', ariaController.update_post);
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TAGS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // GET Tag list page
@@ -90,5 +96,11 @@ router.get('/tags', tagController.list_get);
 
 // GET Tag detail page
 router.get('/tag/:id', tagController.detail_get);
+
+// GET tag create page
+router.get('/create/tag', tagController.create_get);
+
+// POST tag create page
+router.post('/create/tag', tagController.create_post);
 
 module.exports = router;

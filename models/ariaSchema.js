@@ -10,8 +10,8 @@ const AriaSchema = new Schema({
     scene_number: {type: Number},
     language: {type: String},
     voice_type: {type: String},
-    description: {type: String}
-    // aria_tags not implemented
+    description: {type: String},
+    tags: [{type: Schema.Types.ObjectId, ref: 'Tags'}]
 });
 
 // Virtual for aria detail url

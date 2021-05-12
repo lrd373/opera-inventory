@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const Opera = require('../models/operaSchema');
 const Aria = require('../models/ariaSchema');
 const Composer = require('../models/composerSchema');
+const Tag = require('../models/tagSchema');
 
 exports.list_get = (req, res) => {
     Opera.find({})
@@ -28,43 +29,61 @@ exports.detail_get = (req, res) => {
 
         aria_list: function(callback) {
             Aria.find({'opera': req.params.id}).exec(callback);
+        },
+
+        tag_list: function(callback) {
+            Tag.find({}).exec(callback);
         }
 
     }, function(err, results) {
         if (err) { return next(err); }
 
         // Successful opera and aria queries, so render
-        res.render('opera_detail', { opera: results.opera, aria_list: results.aria_list });
+        res.render('opera_detail', { 
+            opera: results.opera, 
+            aria_list: results.aria_list, 
+            tag_list: results.tag_list
+        });
     });
 };
 
 exports.create_get = (req, res, next) => {
-    Composer.find({}).exec((err, composer_list) => {
+    async.parallel({
+        composer_list: function(callback) {
+            Composer.find({}).exec(callback);
+        },
+        tag_list: function(callback) {
+            Tag.find({}).exec(callback);
+        }
+    }, function(err, results) {
         if (err) { return next(err); }
-        console.log(composer_list);
 
-        res.render('opera_form', { title: 'Add Opera', action: "/create/opera", composer_list: composer_list });
+        res.render('opera_form', { 
+            title: 'Add Opera', 
+            action: "", 
+            composer_list: results.composer_list,
+            tag_list: results.tag_list
+        });
     });
 };
 
 exports.create_post = [
-    
     // Validate and sanitize request body
-    body('operaName')
+    body('name')
     .trim()
     .isLength({min: 1})
     .escape()
       .withMessage("Please enter opera name")
-    .isAlphanumeric()
-      .withMessage("Opera name must include only alphanumeric characters"),
+    .matches(/^[À-ÿa-z0-9 ]+$/i)
+      .withMessage("Opera name must include only alphanumeric characters and spaces"),
     
-      body('composer')
+    body('composer')
     .trim()
     .isLength({min: 1})
     .escape()
       .withMessage("Please select a composer"),
     
-    body('premiereDate')
+    body('premiere_date')
     .optional({ checkFalsy: true })
     .escape()
     .isISO8601()
@@ -74,10 +93,10 @@ exports.create_post = [
     .trim()
     .optional({ checkFalsy: true })
     .escape()
-    .isAlphanumeric()
+    .matches(/^[À-ÿa-z0-9 ]+$/i)
       .withMessage("Language must include only alphanumeric characters"),
     
-    body('numberActs')
+    body('number_of_acts')
     .trim()
     .optional({ checkFalsy: true })
     .escape()
@@ -89,28 +108,45 @@ exports.create_post = [
     .optional({ checkFalsy: true })
     .escape(),
     
+    body('tags.*').escape(),
+
     (req, res, next) => {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
             // There were errors in the request body! Oh no!
             // Re-render the form with sanitized values filling in inputs
-            Composer.find({}).exec((err, composer_list) => {
-                if (err) { return next(err); }
-                console.log(composer_list);
-        
-                res.render('opera_form', { title: 'Add Opera', action: "/create/opera", composer_list: composer_list, inputs: req.body, errors: errors.array() });
+            async.parallel({
+                composer_list: function(callback) {
+                    Composer.find({}).exec(callback);
+                },
+                tag_list: function(callback) {
+                    Tag.find({}).exec(callback);
+                }
+            }, (err, results) => {
+               if (err) { return next(err); }
+               res.render('opera_form', { 
+                 title: "Add Opera", 
+                 action: "", 
+                 inputs: req.body,
+                 composer_list: results.composer_list,
+                 tag_list: results.tag_list,
+                 errors: errors.array() 
+               });
             });
         } else {
             // Form inputs were valid, woohoo!
             // Create opera object based on form input
+            console.log('form inputs were valid!');
+
             const opera = new Opera({
-                name: req.body.operaName,
+                name: req.body.name,
                 composer: req.body.composer,
-                premiere_date: req.body.premiereDate,
+                premiere_date: req.body.premiere_date,
                 language: req.body.language,
-                number_of_acts: req.body.numberActs,
+                number_of_acts: req.body.number_of_acts,
                 synopsis: req.body.synopsis,
+                tags: req.body.tags
             });
 
             // Save opera to database and redirect to its detail page
@@ -174,6 +210,9 @@ exports.update_get = (req, res, next) => {
         },
         composer_list: function(callback) {
             Composer.find({}).exec(callback);
+        },
+        tag_list: function(callback) {
+            Tag.find({}).exec(callback);
         }
     }, (err, results) => {
         if (err) { return next(err); }
@@ -183,7 +222,8 @@ exports.update_get = (req, res, next) => {
             title: "Update Opera", 
             action: "/update/opera/"+req.params.id, 
             inputs: results.opera, 
-            composer_list: results.composer_list 
+            composer_list: results.composer_list,
+            tag_list: results.tag_list
         });
     });
 };
@@ -195,7 +235,7 @@ exports.update_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage('Opera name must be specified.')
-    .isAlphanumeric()
+    .matches(/^[À-ÿa-z0-9 ]+$/i)
       .withMessage('Name must include only alphanumeric characters.'),
     
     body('composer')
@@ -208,6 +248,25 @@ exports.update_post = [
     .optional({ checkFalsy: true })
     .isISO8601()
     .toDate(),
+
+    body('language', 'Invalid language, must include only alphabet characters')
+    .trim()
+    .optional({ checkFalsy: true })
+    .matches(/^[À-ÿa-z0-9 ]+$/i)
+    .escape(),
+
+    body('number_of_acts', 'Invalid, please include only numbers')
+    .trim()
+    .optional({ checkFalsy: true })
+    .isNumeric()
+    .escape(),
+
+    body('synopsis', 'Invalid synopsis, please try again')
+    .trim()
+    .optional({ checkFalsy: true })
+    .escape(),
+
+    body('tags.*').escape(),
     
 
    // Process request after validation and sanitization.
@@ -218,25 +277,48 @@ exports.update_post = [
 
        if (!errors.isEmpty()) {
            // There are errors. Render form again with sanitized values/errors messages.
-           res.render('composer_form', { title: 'Update Composer', action: "/update/composer/"+req.params.id, inputs: req.body, errors: errors.array() });
-           return;
-       }
-       else {
+           async.parallel({
+               opera: function(callback) {
+                   Opera.findById(req.params.id)
+                   .populate('composer')
+                   .exec(callback);
+               },
+               composer_list: function(callback) {
+                   Composer.find({}).exec(callback);
+               },
+               tag_list: function(callback) {
+                   Tag.find({}).exec(callback);
+               }
+            }, (err, results) => {
+              if (err) { return next(err); }
+              res.render('opera_form', { 
+                title: "Update Opera", 
+                action: "/update/opera/"+req.params.id, 
+                inputs: results.opera, 
+                composer_list: results.composer_list,
+                tag_list: results.tag_list,
+                errors: errors.array() 
+              });
+            });
+       } else {
            // Data from form is valid.
 
-           // Create a Composer object with escaped and trimmed data based on MongoDB schema.
-           const composer = new Composer(
+           // Create an Opera object with escaped and trimmed data based on MongoDB schema.
+           const opera = new Opera (
                {
-                   first_name: req.body.first_name,
-                   last_name: req.body.last_name,
-                   birth_date: req.body.birth_date,
-                   death_date: req.body.death_date,
+                   name: req.body.name,
+                   composer: req.body.composer,
+                   premiere_date: req.body.premiere_date,
+                   language: req.body.language,
+                   number_of_acts: req.body.number_of_acts,
+                   synopsis: req.body.synopsis,
+                   tags: req.body.tags,
                    _id: req.params.id
                });
-            Composer.findByIdAndUpdate(req.params.id, composer, {}, function (err, theComposer) {
+            Opera.findByIdAndUpdate(req.params.id, opera, {}, function (err, theOpera) {
                 if (err) { return next(err); }
-                   // Successful - redirect to author detail page.
-                   res.redirect(theComposer.url);
+                // Successful - redirect to opera detail page.
+                res.redirect(theOpera.url);
                 }
             );
        }

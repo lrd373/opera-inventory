@@ -21,6 +21,15 @@ block content
   if aria.description 
     h3 Description: 
     p= aria.description
+  h3 Tags:
+  if aria.tags.length > 0 && tag_list
+    ul 
+      each tag in tag_list
+        - if (aria.tags.includes(tag._id))
+          li 
+            a(href=tag.url) #{tag.name}
+  hr
+  a(href="/update"+aria.url) Update this aria 
   a(href="/delete"+aria.url) Delete this aria 
 
 

@@ -4,9 +4,24 @@ block content
 
   h1 Category: #{tag.name} 
 
+  h2 Operas: 
   if opera_list && opera_list.length > 0
-    ul.tagList
+    ul.operaList
     each opera in opera_list 
       li 
         a(href=opera.url) #{opera.name} 
         | by #{opera.composer.fullname}
+  else 
+    p There are no operas with this tag :( 
+    a(href="/operas") Go to operas
+
+  h2 Arias: 
+  if aria_list && aria_list.length > 0
+    ul.ariaList
+    each aria in aria_list 
+      li 
+        a(href=aria.url) #{aria.name} 
+        | from #{aria.opera.name}
+  else 
+    p There are no arias with this tag :( 
+    a(href="/arias") Go to arias 

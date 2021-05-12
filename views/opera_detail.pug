@@ -14,7 +14,14 @@ block content
   if opera.synopsis
     h3 Synopsis:
     p.synopsis= opera.synopsis
-
+  h3 Tags:
+  if opera.tags.length > 0 && tag_list
+    ul 
+      each tag in tag_list
+        - if (opera.tags.includes(tag._id))
+          li 
+            a(href=tag.url) #{tag.name}
+  a(href="/create/tag") Add new tag  
   h2 Arias from this opera 
   if aria_list 
     ul 
