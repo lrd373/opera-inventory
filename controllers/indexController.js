@@ -29,6 +29,6 @@ exports.index_get = (req, res) => {
         if (err) {return next(err); }
 
         // Successful async data retrieval, so render
-        res.render('index', { opera_list: results.opera_list, composer_list: results.composer_list, aria_list: results.aria_list });
+        res.render('index', { index: true, opera_list: results.opera_list, composer_list: results.composer_list, aria_list: results.aria_list });
     });
 };

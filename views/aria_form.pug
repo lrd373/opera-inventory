@@ -3,86 +3,118 @@ extends layout
 block content 
 
   .formContainer 
-    h1= title 
+    .formHeader
+      h1.formTitle= title 
+      .detailEditButtons
+        if !inputs
+          a(class="cancelButton" href='/arias') ❌
+        else if inputs 
+          a(class="cancelButton" href="/aria/"+inputs._id) ❌
     if errors 
-      each error in errors
+      h2 Errors: 
+      each error in errors 
         p= error.msg
     form(action=action method="POST")
-      label(for="name") Aria Name: 
-      input(
-        id="name" 
-        name="name" 
-        type="text" 
-        value=(inputs===undefined ? "" : inputs.name) 
-        placeholder="e.g. Obéissons quand leur voix appelle"
-      )
-      label(for="nickname") Commonly called: 
-      input(
-        id="nickname" 
-        name="nickname" 
-        type="text"
-        placeholder="e.g. Manon's Gavotte" 
-        value=(inputs===undefined ? "" : inputs.nickname)
-      )
-      label(for="opera") Opera: 
-      select(id="opera" name="opera" required)
-        each opera in opera_list
-              option(
-                value=opera._id
-                selected=(inputs!==undefined && inputs.opera===opera._id ? true : false)
-              ) #{opera.name} by #{opera.composer.fullname}
-      a(class="addOperaMsg" href="/create/opera") Click here to add a new opera.
-      label(for="character_name") Character who sings this piece: 
-      input(
-        type="text" 
-        id="character_name" 
-        name="character_name" 
-        placeholder="e.g. Manon Lescaut"
-        value=(inputs===undefined ? "" : inputs.character_name)
-      )
-      label(for="act_number") Act Number: 
-      input(id="act_number" name="act_number" type="number" value=(inputs===undefined ? "" : inputs.act_number))
-      label(for="scene_number") Scene Number: 
-      input(id="scene_number" name="scene_number" type="number" value=(inputs===undefined ? "" : inputs.scene_number))
-      label(for="language") Language: 
-      input(id="language" name="language" type="text" value=(inputs===undefined ? "" : inputs.language))
-      label(for="voice_type") Voice Type: 
-      select(id="voice_type" name="voice_type")
-        option(value="Soprano" 
-          selected=(inputs!==undefined && inputs.voice_type==="Soprano" ? true: false)
-        ) Soprano 
-        option(value="Mezzo-Soprano" 
-          selected=(inputs!==undefined && inputs.voice_type==="Mezzo-Soprano" ? true: false)
-        ) Mezzo-Soprano 
-        option(value="Contralto"
-          selected=(inputs!==undefined && inputs.voice_type==="Contralto" ? true: false)
-        ) Contralto 
-        option(value="Counter-Tenor"
-          selected=(inputs!==undefined && inputs.voice_type==="Counter-Tenor" ? true: false)
-        ) Counter-Tenor 
-        option(value="Tenor"
-          selected=(inputs!==undefined && inputs.voice_type==="Tenor" ? true: false)
-        ) Tenor 
-        option(value="Baritone"
-          selected=(inputs!==undefined && inputs.voice_type==="Baritone" ? true: false)
-        ) Baritone 
-        option(value="Bass-Baritone"
-          selected=(inputs!==undefined && inputs.voice_type==="Bass-Baritone" ? true: false)
-        ) Bass-Baritone 
-        option(value="Bass"
-          selected=(inputs!==undefined && inputs.voice_type==="Bass" ? true: false)
-        ) Bass  
+      .inputAndLabel
+        label(for="name") Aria Name: 
+        input(
+          id="name" 
+          name="name" 
+          type="text" 
+          value=(inputs===undefined ? "" : inputs.name) 
+          placeholder="e.g. Obéissons quand leur voix appelle"
+        )
+
+      .inputAndLabel
+        label(for="nickname") Commonly called: 
+        input(
+          id="nickname" 
+          name="nickname" 
+          type="text"
+          placeholder="e.g. Manon's Gavotte" 
+          value=(inputs===undefined ? "" : inputs.nickname)
+        )
+
+      .inputAndLabel
+        label(for="opera") Opera: 
+        select(id="opera" name="opera" required)
+          each opera in opera_list
+                option(
+                  value=opera._id
+                  selected=(inputs!==undefined && inputs.opera===opera._id ? true : false)
+                ) #{opera.name} by #{opera.composer.fullname}
+        a(class="addOperaMsg" href="/create/opera") + Add a new opera
+      
+      .inputAndLabel
+        label(for="character_name") Character who sings this piece: 
+        input(
+          type="text" 
+          id="character_name" 
+          name="character_name" 
+          placeholder="e.g. Manon Lescaut"
+          value=(inputs===undefined ? "" : inputs.character_name)
+        )
+
+      .inputAndLabel
+        label(for="act_number") Act Number: 
+        input(id="act_number" name="act_number" type="number" value=(inputs===undefined ? "" : inputs.act_number))
+      
+      .inputAndLabel
+        label(for="scene_number") Scene Number: 
+        input(id="scene_number" name="scene_number" type="number" value=(inputs===undefined ? "" : inputs.scene_number))
+      
+      .inputAndLabel
+        label(for="language") Language: 
+        input(id="language" name="language" type="text" value=(inputs===undefined ? "" : inputs.language))
+      
+      .inputAndLabel
+        label(for="voice_type") Voice Type: 
+        select(id="voice_type" name="voice_type")
+          option(value="Soprano" 
+            selected=(inputs!==undefined && inputs.voice_type==="Soprano" ? true: false)
+          ) Soprano 
+          option(value="Mezzo-Soprano" 
+            selected=(inputs!==undefined && inputs.voice_type==="Mezzo-Soprano" ? true: false)
+          ) Mezzo-Soprano 
+          option(value="Contralto"
+            selected=(inputs!==undefined && inputs.voice_type==="Contralto" ? true: false)
+          ) Contralto 
+          option(value="Counter-Tenor"
+            selected=(inputs!==undefined && inputs.voice_type==="Counter-Tenor" ? true: false)
+          ) Counter-Tenor 
+          option(value="Tenor"
+            selected=(inputs!==undefined && inputs.voice_type==="Tenor" ? true: false)
+          ) Tenor 
+          option(value="Baritone"
+            selected=(inputs!==undefined && inputs.voice_type==="Baritone" ? true: false)
+          ) Baritone 
+          option(value="Bass-Baritone"
+            selected=(inputs!==undefined && inputs.voice_type==="Bass-Baritone" ? true: false)
+          ) Bass-Baritone 
+          option(value="Bass"
+            selected=(inputs!==undefined && inputs.voice_type==="Bass" ? true: false)
+          ) Bass  
+      
       fieldset      
-        legend Tags:
+        legend 
+          span.legendHeader Tags:
           if tag_list && tag_list.length > 0
-            each tag in tag_list 
-              input(
-                type="checkbox" 
-                name="tags" 
-                value=tag._id id=tag.name+tag._id
-                checked=(inputs!==undefined && inputs.tags.includes(tag._id) ? true : false)
-              )
-              label(for=tag.name+tag._id)= tag.name 
-      label(for="description") Brief description of the scene: 
-      textarea(id="description" name="description", cols="30", rows="10" value=(inputs===undefined ? "" : inputs.description))
-      input(type="submit" value="Submit")
+            each tag in tag_list
+              .boxAndLabel 
+                input(
+                  type="checkbox" 
+                  name="tags" 
+                  value=tag._id id=tag.name+tag._id
+                  checked=(inputs!==undefined && inputs.tags.includes(tag._id) ? true : false)
+                )
+                label(class="tagLabel" for=tag.name+tag._id)= tag.name
+            a(class="createTagBtn" href="/create/tag")  + Create new tag 
+      
+      .inputAndLabel
+        label(for="description") Description of the scene: 
+        textarea(id="description" name="description", cols="80", rows="10" value=(inputs===undefined ? "" : inputs.description))
+          - if (inputs !== undefined) 
+            | #{inputs.description}
+      
+      .inputAndLabel
+        input(type="submit" value="Submit")

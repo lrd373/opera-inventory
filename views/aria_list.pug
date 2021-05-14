@@ -2,15 +2,19 @@ extends layout
 
 block content
   .listContent
-    h1.categoryListTitle All Arias
-  
+    .listHeader
+      h1.categoryListTitle All Arias
+      .detailEditButtons
+        a(href="/create/aria") + Add new aria 
+    
     if aria_list 
       ul.categoryList
         each aria in aria_list 
           li.categoryListItem
-            a(href= aria.url) #{aria.name} from #{aria.opera.name}
-            |  by 
-            a(href=aria.opera.composer.url) #{aria.opera.composer.fullname}
+            a(href= aria.url) #{aria.name} 
+            span.listItemInfo from 
+              a(class="listItemInfo" href=aria.opera.url) #{aria.opera.name}
+            span.listItemInfo  by 
+              a(href=aria.opera.composer.url) #{aria.opera.composer.fullname}
     else 
       p There are no arias in our database.
-  a(href="/create/aria") Add New Aria 

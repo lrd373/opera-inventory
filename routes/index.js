@@ -103,4 +103,16 @@ router.get('/create/tag', tagController.create_get);
 // POST tag create page
 router.post('/create/tag', tagController.create_post);
 
+// GET tag delete page
+router.get('/delete/tag/:id', tagController.delete_get);
+
+// POST to tag delete page
+router.post('/delete/tag/:id', tagController.delete_post);
+
+// GET tag update page
+router.get('/update/tag/:id', tagController.update_get);
+
+// POST to tag update page
+router.post('/update/tag/:id', tagController.update_post);
+
 module.exports = router;

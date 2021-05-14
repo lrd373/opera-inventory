@@ -1,12 +1,26 @@
+:root {
+  --dark-teal: #317280;
+  --dark-gray: #3a3a3a;
+  --dark-lavendar: #c59cc2de;
+  --light-lavendar: #ecdde6;
+}
+
 body {
-  background-color: #ead3cb;
+  background-color: var(--light-lavendar);
+  color: var(--dark-gray);
+  font-family: 'Open Sans', sans-serif;
   padding: 0;
   margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+p, h3 {
+  font-size: 1.15rem;
+}
+
 a {
-  color: #4392a1;
+  color: var(--dark-teal);
+  font-size: 1.15rem;
   text-decoration: none;
 }
 
@@ -18,49 +32,110 @@ ul {
   list-style: none;
 }
 
+li {
+  margin: 2px 0;
+}
+
+input {
+  display: inline;
+  font-family: 'Open-Sans', sans-serif;
+}
+
+textarea {
+  font-family: 'Open-Sans', sans-serif;
+  font-size: 0.9rem;
+}
+
 /* *********************** HEADER ************************** */
 
 header {
-  background-color: #845460;
+  background-color: var(--dark-lavendar);
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   align-items: baseline;
-  padding: 10px;
+  padding: 10px 20px 0;
 }
 
 .logo {
+  font-weight: lighter;
   grid-column: 1/4;
+  margin: 0;
+}
+
+.logo a {
+  display: inline;
+  font-size: 1.5rem;
+}
+
+.largeLetter {
+  display: inline;
+  font-family: 'Sacramento', cursive, serif;
+  font-weight: bold;
+  font-size: 2.75rem;
 }
 
 .navList {
-  display: flex;
   grid-column: 4/11;
+  display: flex;
   justify-content: flex-end;
+  align-self: flex-end;
+  margin: 0;
 }
 
 .navListItem {
+  background-color: transparent;
+  bottom: 15px;
   margin: 0 8px;
   position: relative;
-  bottom: 0;
-  transition: bottom 0.5s ease-in-out;
-}
-
-.navListItem:hover {
-  bottom: 10px;
+  transition: background-color 0.5s ease-in-out;
 }
 
 .navListItem a {
-  color: black;
+  color: var(--dark-teal);
   font-size: 1.1rem;
-  position: relative;
+  font-weight: bold;
   text-decoration: none;
-  
+}
+
+.navHr {
+  border: solid 1.5px;
+  border-radius: 10px;
+  color: var(--dark-teal);
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.navListItem:hover > .navHr {
+  opacity: 1;
+}
+
+@media (max-width: 800px) {
+  header {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+  }
+
+  .logo{
+    display: block;
+  }
+
+  .navList {
+    justify-content: flex-start;
+    margin: 10px 0 0;
+    padding: 0;
+  }
 }
 
 /* ********************** INDEX PAGE ************************** */
 
 .indexContent {
   text-align: center;
+}
+
+.indexHeader {
+  color: var(--dark-gray);
 }
 
 .indexInfoContainer {
@@ -70,14 +145,17 @@ header {
 }
 
 .indexInfoCard {
-  background-color: #2b4f60;
-  color: #bdc7c9;
+  background-color: #2b4f60d0;
+  color: var(--light-lavendar);
   display: inline;
   font-size: 1.5rem;
   padding: 15px 10px 10px;
   width: 25%;
 }
 
+.cardTitle {
+  color: var(--light-lavendar); 
+}
 .indexInfo {
   margin: 8px 0;
 }
@@ -89,8 +167,14 @@ header {
   padding: 25px;
 }
 
-.categoryListTitle {
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+}
 
+.categoryListTitle {
+  color: var(--dark-gray);
+  margin: 5px 0 10px;
 }
 
 .categoryList {
@@ -98,21 +182,95 @@ header {
 }
 
 .categoryListItem {
+  color: var(--dark-gray);
   font-size: 1.25rem;
+  margin: 5px 0;
 }
 
 .composerDates {
   font-size: 1rem;
 }
 
+.listItemInfo {
+  font-size: 1rem;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5%;
+  justify-content: flex-start;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.tagButton {
+  background-color: #2b4f60d0;
+  display: inline;
+  font-size: 1.5rem;
+  margin: 10px 0;
+  padding: 15px 10px 10px;
+}
+
+.tagButton a {
+  color: var(--light-lavendar);
+}
 
 
 /* ******************* DETAIL PAGES ************************* */
 
-/* ******************* FORM PAGES ************************* */
+.detailContainer {
+  margin: 20px;
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.detailName {
+  margin: 0;
+}
+
+.detailEditButtons {
+  align-self: center;
+}
+
+.editButton {
+  color: transparent;
+  text-shadow: 0 0 0 var(--dark-gray);
+  width: 30px;
+}
+
+.detailList {
+  list-style-type: circle;
+  margin: 5px 0 0;
+}
+
+.detailSubHeader {
+  margin: 10px 0 5px;
+}
+
+.detailSubSection {
+  margin: 5px 0 0 15px;
+}
+
+/* ************************ FORM PAGES ************************* */
 
 .formContainer {
+  margin: auto;
   padding: 25px;
+  width: 80%
+}
+
+.formHeader {
+  display: flex;
+  justify-content: space-between;
+  align-content: baseline;
+}
+
+.formTitle {
+  margin: 0;
 }
 
 form > * {
@@ -120,10 +278,81 @@ form > * {
   margin: 10px 0;
 }
 
+.cancelButton {
+  color: transparent;
+  text-shadow: 0 0 0 var(--dark-teal);
+  align-self: center;
+}
+
 label {
+  display: block;
   font-size: 1.25rem;
 }
 
-.addComposerMsg {
+.inputAndLabel {
+  margin: 20px 0;
+}
+
+.inputAndLabel > * {
+  margin: 2px 0;
+}
+
+fieldset {
+  border:none;
+  padding: 0;
+}
+
+legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-size: 1.25rem;
+  padding: 0;
+}
+
+.legendHeader {
+  grid-column: 1/4;
+}
+
+.boxAndLabel {
+  margin: 5px 10px;
+}
+
+.tagLabel {
   display: inline;
+}
+
+input[type='text'] {
+  width: 100%;
+}
+
+input[type='submit'] {
+  background-color: var(--dark-lavendar);
+  border-radius: 15px;
+  border: none;
+  height: 35px;
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+}
+
+input[type='submit']:hover {
+  color: var(--light-lavendar);
+  background-color: var(--dark-teal);
+}
+
+.addComposerMsg, .addOperaMsg {
+  display: block;
+}
+
+.createTagBtn {
+  grid-column: 1/4;
+}
+
+
+/* ************************* DELETE PAGES ************************* */
+
+.deleteContainer {
+  margin: 20px;
+}
+
+.itemLink {
+  font-size: 1.7rem;
 }

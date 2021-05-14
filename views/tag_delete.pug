@@ -1,0 +1,26 @@
+extends layout 
+
+block content 
+
+  .deleteContainer
+    h1 Delete 
+      a(class="itemLink" href=tag.url) #{tag.name}
+    if (opera_list.length > 0 || aria_list.length > 0)
+      h2 To delete this tag, you must first:
+      if opera_list.length > 0 
+        h2 Remove it from these opera records by clicking 'Update this opera': 
+        ul
+          each opera in opera_list 
+            li
+              a(href=opera.url) #{opera.name}
+      if aria_list && aria_list.length > 0
+        h2 Remove it from these aria records by clicking 'Update this aria':
+        ul
+          each aria in aria_list 
+            li
+              a(href=aria.url) #{aria.name}
+    - if (opera_list.length===0 && aria_list.length===0) 
+        h2 Are you sure you want to delete this tag?
+        form(method='POST' action='')
+          input(type='hidden', name='tagId', required='true', value=tag._id )
+          input(type='submit' value="Yes, Delete")  

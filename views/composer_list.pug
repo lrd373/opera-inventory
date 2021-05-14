@@ -2,20 +2,21 @@ extends layout
 
 block content
   .listContent
-    h1.categoryListTitle All Composers
+    .listHeader
+      h1.categoryListTitle All Composers
+      .detailEditButtons
+        a(class="listAddNew" href="/create/composer") + Add new composer 
   
     if composer_list 
       ul.categoryList
         each composer in composer_list 
           li.categoryListItem 
-            a(href= composer.url) #{composer.fullname}
-              if composer.birth_date && composer.death_date
-                span.composerDates  (#{composer.birth_date_local} - #{composer.death_date_local})
-              else if composer.birth_date
-                span.composerDates Born: #{composer.birth_date_local}
-              else if composer.death_date 
-                span.composerDates Died: #{composer.death_date_local}
+            a(href= composer.url) #{composer.fullname} 
+            if composer.birth_date && composer.death_date
+              span(class="composerDates listItemInfo")  (#{composer.birth_date_local} - #{composer.death_date_local})
+            else if composer.birth_date
+              span(class="composerDates listItemInfo") Born: #{composer.birth_date_local}
+            else if composer.death_date 
+              span(class="composerDates listItemInfo") Died: #{composer.death_date_local}
     else 
       p There are no composers in our database.
-
-    a(href="/create/composer") Add new composer 

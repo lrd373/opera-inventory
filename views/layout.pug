@@ -1,22 +1,39 @@
 doctype html
 html
   head
-    title= title
+    title Opera Inventory
+    //- Favicon
+    link(rel="shortcut icon" type="image/png" href="/images/favicon.ico")
+    //- Google Fonts
+    link(rel="preconnect" href="https://fonts.gstatic.com")
+    link(href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Sacramento&display=swap" rel="stylesheet") 
+    //- Stylesheet
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     header
-      h1.logo 
-        a(href="/") Opera Inventory
+      .logo 
+        a(href="/")
+          span.largeLetter O
+          | pera 
+          span.largeLetter I
+          | nventory
+
       ul.navList 
-        li.navListItem
-          a(href="/") Home
+        if !index
+          li.navListItem
+            a(href="/") Home
+            hr.navHr
         li.navListItem 
           a(href="/operas") Operas
+          hr.navHr
         li.navListItem 
           a(href="/composers") Composers
+          hr.navHr
         li.navListItem 
           a(href="/arias") Arias
+          hr.navHr
         li.navListItem 
-          a(href="/tags") Search by tag 
+          a(href="/tags") Search by tag
+          hr.navHr
 
     block content

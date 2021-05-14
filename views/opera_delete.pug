@@ -1,17 +1,18 @@
 extends layout 
 
 block content 
-
-  h1 Delete 
-    a(href=opera.url) #{opera.fullname} by #{opera.composer.fullname}
-  if aria_list && aria_list.length > 0
-    h2 To delete this opera, you must first delete these aria records: 
-    ul
-      each aria in aria_list 
-        li
-          a(href=aria.url) #{aria.name}
-  else
-    h2 Are you sure you want to delete this opera?
-    form(method='POST' action='')
-      input(type='hidden', name='operaId', required='true', value=opera._id )
-      button(type='submit') Yes, Delete 
+  .deleteContainer
+    h1 Delete 
+      a(class="itemLink" href=opera.url) #{opera.name} 
+      |by #{opera.composer.fullname}
+    if aria_list && aria_list.length > 0
+      h2 To delete this opera, you must first delete these aria records: 
+      ul
+        each aria in aria_list 
+          li
+            a(href=aria.url) #{aria.name}
+    else
+      h2 Are you sure you want to delete this opera?
+      form(method='POST' action='')
+        input(type='hidden', name='operaId', required='true', value=opera._id )
+        input(type='submit' value="Yes, Delete") 

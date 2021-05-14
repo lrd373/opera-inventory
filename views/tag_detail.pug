@@ -1,27 +1,36 @@
 extends layout 
 
 block content 
+  .detailContainer 
+    .detailHeader
+      h1.detailName Category: #{tag.name} 
+      .detailEditButtons
+        a(href="/update"+tag.url)
+          img(class="editButton" src="/images/edit.png", alt="Edit this tag")
+        a(href="/delete"+tag.url)
+          img(class="editButton" src="/images/trash.png", alt="Delete this tag")
+        
+    if tag.description 
+      p.detailSubSection= tag.description
 
-  h1 Category: #{tag.name} 
+    h2.detailSubHeader Operas: 
+    if opera_list && opera_list.length > 0
+      ul(class="detailList")
+        each opera in opera_list 
+          li 
+            a(href=opera.url) #{opera.name} 
+            | by #{opera.composer.fullname}
+    else 
+      p.detailSubSection There are no operas with this tag :( 
+      a(class="detailSubSection" href="/operas") Go to operas
 
-  h2 Operas: 
-  if opera_list && opera_list.length > 0
-    ul.operaList
-    each opera in opera_list 
-      li 
-        a(href=opera.url) #{opera.name} 
-        | by #{opera.composer.fullname}
-  else 
-    p There are no operas with this tag :( 
-    a(href="/operas") Go to operas
-
-  h2 Arias: 
-  if aria_list && aria_list.length > 0
-    ul.ariaList
-    each aria in aria_list 
-      li 
-        a(href=aria.url) #{aria.name} 
-        | from #{aria.opera.name}
-  else 
-    p There are no arias with this tag :( 
-    a(href="/arias") Go to arias 
+    h2.detailSubHeader Arias: 
+    if aria_list && aria_list.length > 0
+      ul(class="detailList")
+        each aria in aria_list 
+          li 
+            a(href=aria.url) #{aria.name} 
+            | from #{aria.opera.name}
+    else 
+      p.detailSubSection There are no arias with this tag :( 
+      a(class="detailSubSection" href="/arias") Go to arias

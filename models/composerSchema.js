@@ -7,7 +7,8 @@ const ComposerSchema = new Schema({
     first_name: {type: String, required: true},
     last_name: {type: String, require: true},
     birth_date: {type: Date},
-    death_date: {type: Date}
+    death_date: {type: Date},
+    bio: {type: String}
 });
 
 // Virtual for composer full name

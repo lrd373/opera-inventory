@@ -1,17 +1,42 @@
 extends layout 
 
 block content 
-  h1= title 
-
-  .formContainer 
+  .formContainer
+    .formHeader
+      h1.formTitle= title
+      .detailEditButtons
+        if !inputs
+            a(class="cancelButton" href='/tags') ❌
+        else if inputs 
+          a(class="cancelButton" href="/tag/"+inputs._id) ❌
+    if errors 
+      h2 Errors: 
+      each error in errors 
+        p= error.msg
+  
     form(action=action method="POST")
-      label(for="name") Tag Name: 
-      input(
-        id="name" 
-        name="name" 
-        type="text" 
-        required 
-        placeholder="e.g. Vengeful"
-        value=(inputs===undefined ? "" : inputs.name)
-      )
-      input(type="submit" name="submit" value="Submit")    
+      .inputAndLabel
+        label(for="name") Tag Name: 
+        input(
+          id="name" 
+          name="name" 
+          type="text" 
+          required 
+          placeholder="e.g. Vengeful"
+          value=(inputs===undefined ? "" : inputs.name)
+        )
+
+      .inputAndLabel
+        label(for="description") Description: 
+        textarea(
+          id="description" 
+          name="description"
+          cols="80"
+          rows="10"
+          value=(inputs===undefined ? "" : inputs.description) 
+        ) 
+          - if (inputs !== undefined) 
+            | #{inputs.description}
+      
+      .inputAndLabel
+        input(type="submit" name="submit" value="Submit")    

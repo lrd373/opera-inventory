@@ -1,10 +1,13 @@
 var express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const sort = require('./sort');
 
 const Aria = require('../models/ariaSchema');
 const Opera = require('../models/operaSchema');
 const Tag = require('../models/tagSchema');
+
+
 
 exports.list_get = (req, res, next) => {
     async.parallel({
@@ -37,6 +40,9 @@ exports.list_get = (req, res, next) => {
 
             aria_list_with_composers.push(newAriaObj);
         });
+
+        // Sort aria list by name
+        aria_list_with_composers.sort(sort.byName);
 
         // Render aria list page
         res.render('aria_list', { aria_list: aria_list_with_composers});
@@ -92,11 +98,17 @@ exports.create_get = (req, res, next) => {
     }, (err, results) => {
       if (err) { return next(err); }
 
+      // Sort opera and tag lists by name
+      let alpha_opera_list = results.opera_list;
+      alpha_opera_list.sort(sort.byName);
+      let alpha_tag_list = results.tag_list;
+      alpha_tag_list.sort(sort.byName);
+
       res.render('aria_form', { 
         title: 'Add Aria', 
         action: '/create/aria',
-        opera_list: results.opera_list, 
-        tag_list: results.tag_list 
+        opera_list: alpha_opera_list, 
+        tag_list: alpha_tag_list 
       });
 
     });
@@ -110,13 +122,13 @@ exports.create_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage("Please add an aria name")
-    .matches(/[À-ÿa-z0-9 '-]/gmi)
+      .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
       .withMessage("Aria name must only include alphanumeric characters"),
 
     body('nickname')
     .trim()
     .optional({checkFalsy: true})
-    .matches(/[À-ÿa-z0-9 '-]/gmi)
+    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
     .escape()
       .withMessage("Aria nickname must include only alphanumeric characters"),
 
@@ -151,19 +163,20 @@ exports.create_post = [
     .trim()
     .optional({checkFalsy: true})
     .escape()
-    .matches(/^[À-ÿa-z0-9 '-]+$/i)
+    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
       .withMessage("Language must include only alphabet characters"),
 
     body('voice_type')
     .trim()
     .optional({checkFalsy: true})
     .escape()
-    .matches(/^[À-ÿa-z0-9 '-]+$/i)
+    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
       .withMessage("Voice type must include only alphanumeric characters"),
 
     body('description')
     .trim()
     .optional({checkFalsy: true})
+    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
     .escape(),
 
     // Now, process validated and sanitized form inputs
@@ -184,12 +197,18 @@ exports.create_post = [
             }
           }, (err, results) => {
             if (err) { return next(err); }
+
+            // Sort opera and tag lists by name
+            let alpha_opera_list = results.opera_list;
+            alpha_opera_list.sort(sort.byName);
+            let alpha_tag_list = results.tag_list;
+            alpha_tag_list.sort(sort.byName);
       
             res.render('aria_form', { 
               title: 'Add Aria', 
               action: '/create/aria',
-              opera_list: results.opera_list, 
-              tag_list: results.tag_list,
+              opera_list: alpha_opera_list, 
+              tag_list: alpha_tag_list,
               inputs: req.body,
               errors: errors.array() 
             });
@@ -254,12 +273,18 @@ exports.update_get = (req, res, next) => {
   }, (err, results) => {
     if (err) { return next(err); }
 
+    // Sort opera and tag lists by name
+    let alpha_opera_list = results.opera_list;
+    alpha_opera_list.sort(sort.byName);
+    let alpha_tag_list = results.tag_list;
+    alpha_tag_list.sort(sort.byName);
+
     res.render('aria_form', { 
       title: 'Update Aria',
       action: "/update/aria/"+req.params.id,
       inputs: results.aria,
-      opera_list: results.opera_list, 
-      tag_list: results.tag_list 
+      opera_list: alpha_opera_list, 
+      tag_list: alpha_tag_list 
     });
 
   });
@@ -273,13 +298,13 @@ exports.update_post = [
   .isLength({ min: 1 })
   .escape()
     .withMessage("Please add an aria name")
-  .matches(/[À-ÿa-z0-9 -']/gmi)
+    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
     .withMessage("Aria name must only include alphanumeric characters"),
 
   body('nickname')
   .trim()
   .optional({checkFalsy: true})
-  .matches(/[À-ÿa-z0-9 -']/gmi)
+  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
     .withMessage("Aria nickname must include only alphanumeric characters"),
 
   body('opera')
@@ -291,7 +316,7 @@ exports.update_post = [
   body('character_name')
   .trim()
   .optional({checkFalsy: true})
-  .matches(/[À-ÿa-z0-9 '-]/gmi)
+  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
   .escape()
     .withMessage("Character name must include only alphanumeric characters"),
 
@@ -326,6 +351,7 @@ exports.update_post = [
   body('description')
   .trim()
   .optional({checkFalsy: true})
+  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
   .escape(),
 
   // Now, process validated and sanitized form inputs
@@ -346,11 +372,17 @@ exports.update_post = [
           }
         }, (err, results) => {
           if (err) { return next(err); }
+
+          // Sort opera and tag lists by name
+          let alpha_opera_list = results.opera_list;
+          alpha_opera_list.sort(sort.byName);
+          let alpha_tag_list = results.tag_list;
+          alpha_tag_list.sort(sort.byName);
     
           res.render('aria_form', { 
             title: 'Add Aria', 
-            opera_list: results.opera_list, 
-            tag_list: results.tag_list,
+            opera_list: alpha_opera_list, 
+            tag_list: alpha_tag_list,
             inputs: req.body,
             errors: errors.array() 
           });

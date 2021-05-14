@@ -2,20 +2,20 @@ extends layout
 
 block content
   .indexContent
-    h1 In our Database:
+    h1.indexHeader In our Database:
     .indexInfoContainer
       if opera_list 
         .indexInfoCard 
-          a(class="indexInfo" href="/operas") Operas: 
-          p(class="indexInfo infoCount")= opera_list.length
+          a(class="indexInfo cardTitle" href="/operas") Operas 
+          p(class="indexInfo")= opera_list.length
       if composer_list 
         .indexInfoCard 
-          a(class="indexInfo" href="/composers") Composers: 
-          p(class="indexInfo infoCount")= composer_list.length 
+          a(class="indexInfo cardTitle" href="/composers") Composers
+          p(class="indexInfo")= composer_list.length 
       if aria_list 
         .indexInfoCard
-          a(class="indexInfo" href="/arias") Arias:
-          p(class="indexInfo infoCount")= aria_list.length
+          a(class="indexInfo cardTitle" href="/arias") Arias
+          p(class="indexInfo")= aria_list.length
     
           
       

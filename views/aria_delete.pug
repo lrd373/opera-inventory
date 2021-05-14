@@ -1,9 +1,12 @@
 extends layout 
 
-block content 
-  h1 Delete #{aria.name} from #{aria.opera.name}
+block content
+  .deleteContainer 
+    h1 Delete 
+      a(class="itemLink" href=aria.url) #{aria.name} 
+      | from #{aria.opera.name}
 
-  h2 Are you sure you want to delete this aria?
-  form(action="" method="POST")
-    input(type="hidden" name="ariaId" value=aria._id)
-    button(type="submit") Yes, Delete 
+    h2 Are you sure you want to delete this aria?
+    form(action="" method="POST")
+      input(type="hidden" name="ariaId" value=aria._id)
+      input(type="submit" value="Yes, Delete") 

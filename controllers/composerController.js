@@ -1,6 +1,7 @@
 var express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const sort = require('./sort');
 
 const Composer = require('../models/composerSchema');
 const Opera = require('../models/operaSchema');
@@ -9,9 +10,13 @@ exports.list_get = (req, res, next) => {
     Composer.find({})
     .exec((err, composer_list) => {
         if (err) { return next(err); }
+        
+        // Sort composer list by last name
+        let alpha_list = composer_list;
+        alpha_list.sort(sort.byLastName);
 
         // Successful composer query, so render
-        res.render('composer_list', { composer_list: composer_list });
+        res.render('composer_list', { composer_list: alpha_list });
     }); 
 }
 
@@ -31,9 +36,13 @@ exports.detail_get = (req, res, next) => {
     }, function(err, results) {
         if (err) { return next(err) };
 
+        // Sort opera list by name
+        let alpha_opera_list = results.opera_list;
+        alpha_opera_list.sort(sort.byName);
+
         // Successful async data retrieval
         // render composer detail page
-        res.render('composer_detail', { composer: results.composer, opera_list: results.opera_list})
+        res.render('composer_detail', { composer: results.composer, opera_list: alpha_opera_list});
     });
     
 };
@@ -67,7 +76,9 @@ exports.create_post = [
     body('death_date', 'Invalid date of death')
       .optional({ checkFalsy: true })
       .isISO8601()
-      .toDate(), // comma to daisy chain these functions with the (req, res) function that follows
+      .toDate(), 
+    body('bio')
+        .escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -89,7 +100,8 @@ exports.create_post = [
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
                     birth_date: req.body.birth_date,
-                    death_date: req.body.death_date
+                    death_date: req.body.death_date,
+                    bio: req.body.bio
                 });
             composer.save(function (err) { // add to database
                 if (err) { return next(err); }
@@ -111,7 +123,11 @@ exports.delete_get = (req, res, next) => {
     }, (err, results) => {
         if (err) { return next(err); }
 
-        res.render('composer_delete', {composer: results.composer, opera_list: results.opera_list });
+        // Sort opera list by name
+        let alpha_opera_list = results.opera_list;
+        alpha_opera_list.sort(sort.byName);
+
+        res.render('composer_delete', {composer: results.composer, opera_list: alpha_opera_list });
     });
 };
 
@@ -126,7 +142,11 @@ exports.delete_post = (req, res, next) => {
     }, (err, results) => {
         if (err) { return next(err); }
         else if (results.opera_list && results.opera_list.length > 0) {
-            res.render('composer_delete', {composer: results.composer, opera_list: results.opera_list });
+            // Sort opera list by name
+            let alpha_opera_list = results.opera_list;
+            alpha_opera_list.sort(sort.byName);
+
+            res.render('composer_delete', {composer: results.composer, opera_list: alpha_opera_list });
         } else {
             Composer.findByIdAndRemove(req.body.composerId, (err) => {
                 if (err) { return next(err); }
@@ -146,29 +166,31 @@ exports.update_get = (req, res, next) => {
 };
 
 exports.update_post = [
-     // Validate and sanitize request info.
-     body('first_name')
-     .trim()
-     .isLength({ min: 1 })
-     .escape()
-       .withMessage('First name must be specified.')
-     .isAlphanumeric()
-       .withMessage('First name must include only alphanumeric characters.'),
-   body('last_name')
+    // Validate and sanitize request info.
+    body('first_name')
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+      .withMessage('First name must be specified.')
+    .isAlphanumeric()
+      .withMessage('First name must include only alphanumeric characters.'),
+    body('last_name')
      .trim()
      .isLength({ min: 1 })
      .escape()
        .withMessage('Last name must be specified.')
      .isAlphanumeric()
        .withMessage('Last name must include only alphanumeric characters.'),
-   body('birth_date', 'Invalid date of birth')
+    body('birth_date', 'Invalid date of birth')
      .optional({ checkFalsy: true })
      .isISO8601()
      .toDate(),
-   body('death_date', 'Invalid date of death')
+    body('death_date', 'Invalid date of death')
      .optional({ checkFalsy: true })
      .isISO8601()
-     .toDate(), // comma to daisy chain these functions with the (req, res) function that follows
+     .toDate(), 
+    body('bio')
+        .escape(),
 
    // Process request after validation and sanitization.
    (req, res, next) => {
@@ -191,6 +213,7 @@ exports.update_post = [
                    last_name: req.body.last_name,
                    birth_date: req.body.birth_date,
                    death_date: req.body.death_date,
+                   bio: req.body.bio,
                    _id: req.params.id
                });
             Composer.findByIdAndUpdate(req.params.id, composer, {}, function (err, theComposer) {

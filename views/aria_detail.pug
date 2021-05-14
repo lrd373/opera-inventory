@@ -1,35 +1,44 @@
 extends layout
 
 block content
-  h1 #{aria.name}
-  if aria.nickname 
-    h3 aka #{aria.nickname}
-  h2 from 
-    a(href= aria.opera.url) #{aria.opera.name} 
-    | by 
-    a(href= aria.opera.composer.url) #{aria.opera.composer.fullname} 
-  if aria.act_number 
-    h3 Act #{aria.act_number}
-    if aria.scene_number 
-      | Scene #{aria.scene_number} 
-  if aria.character_name 
-    h3 Sung by #{aria.character_name}
-  if aria.voice_type 
-    h3 Aria for #{aria.voice_type}
-  if aria.language 
-    h3 Language: #{aria.language}
-  if aria.description 
-    h3 Description: 
-    p= aria.description
-  h3 Tags:
-  if aria.tags.length > 0 && tag_list
-    ul 
-      each tag in tag_list
-        - if (aria.tags.includes(tag._id))
-          li 
-            a(href=tag.url) #{tag.name}
-  hr
-  a(href="/update"+aria.url) Update this aria 
-  a(href="/delete"+aria.url) Delete this aria 
+  .detailContainer
+    .detailHeader
+      h1.detailName #{aria.name}
+      .detailEditButtons
+        a(href="/update"+aria.url) 
+          img(class="editButton" src="/images/edit.png", alt="Edit this aria") 
+        a(href="/delete"+aria.url)
+          img(class="editButton" src="/images/trash.png", alt="Delete this aria")
+    if aria.nickname 
+      h3.detailSubSection aka #{aria.nickname}
+    h3.detailSubSection from 
+      if aria.act_number 
+        | Act #{aria.act_number}
+      if aria.scene_number 
+        | Scene #{aria.scene_number} 
+      if aria.act_number || aria.scene_number 
+        |  of 
+      a(href= aria.opera.url) #{aria.opera.name} 
+      | by 
+      a(href= aria.opera.composer.url) #{aria.opera.composer.fullname} 
 
+    if aria.character_name && aria.voice_type 
+      p.detailSubSection Sung by #{aria.character_name}, #{aria.voice_type}
+    else if aria.character_name 
+      p.detailSubSection Sung by #{aria.character_name}
+    else if aria.voice_type 
+      p.detailSubSection Aria for #{aria.voice_type}
 
+    if aria.language 
+      p.detailSubSection Language: #{aria.language}
+    if aria.description 
+      h2.detailSubHeader Description: 
+      p.detailSubSection= aria.description
+    h2.detailSubHeader Tags:
+    if aria.tags.length > 0 && tag_list
+      ul.detailList
+        each tag in tag_list
+          - if (aria.tags.includes(tag._id))
+            li 
+              a(href=tag.url) #{tag.name}
+    a(class="detailSubHeader" href="/update"+aria.url) + Add a tag

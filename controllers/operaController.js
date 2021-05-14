@@ -1,6 +1,7 @@
 var express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const sort = require('./sort');
 
 const Opera = require('../models/operaSchema');
 const Aria = require('../models/ariaSchema');
@@ -13,8 +14,12 @@ exports.list_get = (req, res) => {
     .exec((err, opera_list) => {
         if (err) { return next(err); }
 
-        // Successful opera and aria queries, so render
-        res.render('opera_list', { opera_list: opera_list });
+        // Sort opera list by name
+        let alpha_list = opera_list;
+        alpha_list.sort(sort.byName);
+
+        // Successful opera query, so render
+        res.render('opera_list', { opera_list: alpha_list });
     });
 };
 
@@ -38,11 +43,17 @@ exports.detail_get = (req, res) => {
     }, function(err, results) {
         if (err) { return next(err); }
 
+        // Sort aria and tag lists by name
+        let alpha_aria_list = results.aria_list;
+        alpha_aria_list.sort(sort.byName);
+        let alpha_tag_list = results.tag_list;
+        alpha_tag_list.sort(sort.byName);
+
         // Successful opera and aria queries, so render
         res.render('opera_detail', { 
             opera: results.opera, 
-            aria_list: results.aria_list, 
-            tag_list: results.tag_list
+            aria_list: alpha_aria_list, 
+            tag_list: alpha_tag_list
         });
     });
 };
@@ -58,11 +69,19 @@ exports.create_get = (req, res, next) => {
     }, function(err, results) {
         if (err) { return next(err); }
 
+        // Sort composer list by last name
+        let alpha_composer_list = results.composer_list;
+        alpha_composer_list.sort(sort.byLastName);
+
+        // Sort tag list by name
+        let alpha_tag_list = results.tag_list;
+        alpha_tag_list.sort(sort.byName);
+
         res.render('opera_form', { 
             title: 'Add Opera', 
             action: "", 
-            composer_list: results.composer_list,
-            tag_list: results.tag_list
+            composer_list: alpha_composer_list,
+            tag_list: alpha_tag_list
         });
     });
 };
@@ -74,7 +93,7 @@ exports.create_post = [
     .isLength({min: 1})
     .escape()
       .withMessage("Please enter opera name")
-    .matches(/^[À-ÿa-z0-9 ]+$/i)
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
       .withMessage("Opera name must include only alphanumeric characters and spaces"),
     
     body('composer')
@@ -92,8 +111,8 @@ exports.create_post = [
     body('language')
     .trim()
     .optional({ checkFalsy: true })
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
     .escape()
-    .matches(/^[À-ÿa-z0-9 ]+$/i)
       .withMessage("Language must include only alphanumeric characters"),
     
     body('number_of_acts')
@@ -106,6 +125,7 @@ exports.create_post = [
     body('synopsis')
     .trim()
     .optional({ checkFalsy: true })
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
     
     body('tags.*').escape(),
@@ -125,13 +145,22 @@ exports.create_post = [
                 }
             }, (err, results) => {
                if (err) { return next(err); }
-               res.render('opera_form', { 
-                 title: "Add Opera", 
-                 action: "", 
-                 inputs: req.body,
-                 composer_list: results.composer_list,
-                 tag_list: results.tag_list,
-                 errors: errors.array() 
+
+                // Sort composer list by last name
+                let alpha_composer_list = results.composer_list;
+                alpha_composer_list.sort(sort.byLastName);
+
+                // Sort tag list by name
+                let alpha_tag_list = results.tag_list;
+                alpha_tag_list.sort(sort.byName);
+
+                res.render('opera_form', { 
+                  title: "Add Opera", 
+                  action: "", 
+                  inputs: req.body,
+                  composer_list: alpha_composer_list,
+                  tag_list: alpha_tag_list,
+                  errors: errors.array() 
                });
             });
         } else {
@@ -173,7 +202,11 @@ exports.delete_get = (req, res, next) => {
     }, (err, results) => {
         if (err) { return next(err); }
 
-        res.render('opera_delete', {opera: results.opera, aria_list: results.aria_list});
+        // Sort aria list by name
+        let alpha_aria_list = results.aria_list;
+        alpha_aria_list.sort(sort.byName);
+
+        res.render('opera_delete', {opera: results.opera, aria_list: alpha_aria_list});
     });
 };
 
@@ -191,7 +224,11 @@ exports.delete_post = (req, res, next) => {
     }, (err, results) => {
         if (err) {return next(err);}
         else if (results.aria_list.length > 0) {
-            res.render('opera_delete', {opera: results.opera, aria_list: results.aria_list});
+            // Sort aria list by name
+            let alpha_aria_list = results.aria_list;
+            alpha_aria_list.sort(sort.byName);
+
+            res.render('opera_delete', {opera: results.opera, aria_list: alpha_aria_list});
         } else {
             Opera.findByIdAndRemove(req.body.operaId, (err) => {
                 if (err) { return next(err); }
@@ -216,14 +253,21 @@ exports.update_get = (req, res, next) => {
         }
     }, (err, results) => {
         if (err) { return next(err); }
-        console.log(results.opera);
+
+        // Sort composer list by last name
+        let alpha_composer_list = results.composer_list;
+        alpha_composer_list.sort(sort.byLastName);
+
+        // Sort tag list by name
+        let alpha_tag_list = results.tag_list;
+        alpha_tag_list.sort(sort.byName);
 
         res.render('opera_form', { 
             title: "Update Opera", 
             action: "/update/opera/"+req.params.id, 
             inputs: results.opera, 
-            composer_list: results.composer_list,
-            tag_list: results.tag_list
+            composer_list: alpha_composer_list,
+            tag_list: alpha_tag_list
         });
     });
 };
@@ -235,7 +279,7 @@ exports.update_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage('Opera name must be specified.')
-    .matches(/^[À-ÿa-z0-9 ]+$/i)
+      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
       .withMessage('Name must include only alphanumeric characters.'),
     
     body('composer')
@@ -252,7 +296,7 @@ exports.update_post = [
     body('language', 'Invalid language, must include only alphabet characters')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/^[À-ÿa-z0-9 ]+$/i)
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
 
     body('number_of_acts', 'Invalid, please include only numbers')
@@ -264,7 +308,7 @@ exports.update_post = [
     body('synopsis', 'Invalid synopsis, please try again')
     .trim()
     .optional({ checkFalsy: true })
-    .escape(),
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi),
 
     body('tags.*').escape(),
     
@@ -291,12 +335,21 @@ exports.update_post = [
                }
             }, (err, results) => {
               if (err) { return next(err); }
+
+              // Sort composer list by last name
+              let alpha_composer_list = results.composer_list;
+              alpha_composer_list.sort(sort.byLastName);
+
+              // Sort tag list by name
+              let alpha_tag_list = results.tag_list;
+              alpha_tag_list.sort(sort.byName);
+
               res.render('opera_form', { 
                 title: "Update Opera", 
                 action: "/update/opera/"+req.params.id, 
                 inputs: results.opera, 
-                composer_list: results.composer_list,
-                tag_list: results.tag_list,
+                composer_list: alpha_composer_list,
+                tag_list: alpha_tag_list,
                 errors: errors.array() 
               });
             });

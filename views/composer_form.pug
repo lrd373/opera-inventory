@@ -1,40 +1,68 @@
 extends layout 
 
 block content 
-  h1= title 
+  .formContainer
+    .formHeader
+      h1.formTitle= title
+      .detailEditButtons
+        if !inputs
+          a(class="cancelButton" href='/composers') ❌
+        else if inputs 
+          a(class="cancelButton" href="/composer/"+inputs._id) ❌ 
+    if errors 
+        h2 Errors: 
+        each error in errors 
+          p= error.msg
 
-  .formContainer 
     form(action=action method="POST")
-      label(for="first_name") Composer's First Name: 
-      input(
-        id="first_name" 
-        name="first_name" 
-        type="text" required 
-        placeholder="e.g. Gioachino"
-        value=(inputs===undefined ? "" : inputs.first_name)
-      )
-      label(for="last_name") Composer's Last Name: 
-      input(
-        id="last_name" 
-        name="last_name" 
-        type="text" required 
-        placeholder="e.g. Rossini"
-        value=(inputs===undefined ? "" : inputs.last_name)
-      )
-      label(for="birth_date") Composer's Birth Date: 
-      input(
-        id="birth_date" 
-        name="birth_date" 
-        type="date" 
-        placeholder="mm/dd/yyyy"
-        value=(inputs===undefined ? "" : inputs.birth_date_form)
-      )
-      label(for="death_date") Composer's Date of Death: 
-      input(
-        id="death_date" 
-        name="death_date" 
-        type="date" 
-        placeholder="mm/dd/yyyy"
-        value=(inputs===undefined ? "" : inputs.death_date_form)
-      )
-      input(type="submit" name="submit" value="Submit")    
+      .inputAndLabel
+        label(for="first_name") First Name: 
+        input(
+          id="first_name" 
+          name="first_name" 
+          type="text" required 
+          placeholder="e.g. Gioachino"
+          value=(inputs===undefined ? "" : inputs.first_name)
+        )
+
+      .inputAndLabel
+        label(for="last_name") Last Name: 
+        input(
+          id="last_name" 
+          name="last_name" 
+          type="text" required 
+          placeholder="e.g. Rossini"
+          value=(inputs===undefined ? "" : inputs.last_name)
+        )
+
+      .inputAndLabel
+        label(for="birth_date") Birth Date: 
+        input(
+          id="birth_date" 
+          name="birth_date" 
+          type="date" 
+          placeholder="mm/dd/yyyy"
+          value=(inputs===undefined ? "" : inputs.birth_date_form)
+        )
+      .inputAndLabel
+        label(for="death_date") Date of Death: 
+        input(
+          id="death_date" 
+          name="death_date" 
+          type="date" 
+          placeholder="mm/dd/yyyy"
+          value=(inputs===undefined ? "" : inputs.death_date_form)
+        )
+
+      .inputAndLabel
+        label(for="bio") Bio: 
+        textarea(
+          id="bio" 
+          name="bio"
+          cols="80"
+          rows="10"
+          value=(inputs===undefined ? "" : inputs.bio)
+        )
+
+      .inputAndLabel
+        input(type="submit" name="submit" value="Submit")    

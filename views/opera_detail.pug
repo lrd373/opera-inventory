@@ -1,38 +1,38 @@
 extends layout
 
 block content
-  h1 #{opera.name} 
-  h2 An Opera 
-    if opera.number_of_acts
-      | in #{opera.number_of_acts} Acts 
-    | by 
-    a(href= opera.composer.url) #{opera.composer.fullname} 
-  if opera.premiere_date
-    p Premiered: #{opera.premiere_date_local}
-  if opera.language 
-    p Language: #{opera.language}
-  if opera.synopsis
-    h3 Synopsis:
-    p.synopsis= opera.synopsis
-  h3 Tags:
-  if opera.tags.length > 0 && tag_list
-    ul 
-      each tag in tag_list
-        - if (opera.tags.includes(tag._id))
+  .detailContainer
+    .detailHeader
+      h1.detailName #{opera.name}
+      .detailEditButtons 
+        a(href="/update"+opera.url)
+          img(class="editButton" src="/images/edit.png", alt="Edit this opera")
+        a(href="/delete"+opera.url)
+          img(class="editButton" src="/images/trash.png", alt="Delete this opera")
+    h3.detailSubSection Opera 
+      if opera.number_of_acts
+        | in #{opera.number_of_acts} Acts 
+      | by 
+      a(href= opera.composer.url) #{opera.composer.fullname} 
+    if opera.premiere_date
+      p.detailSubSection Premiered: #{opera.premiere_date_local}
+    if opera.language 
+      p.detailSubSection Language: #{opera.language}
+    if opera.synopsis
+      h2.detailSubHeader Synopsis:
+      p(class="synopsis detailSubSection")= opera.synopsis
+    h2.detailSubHeader Tags:
+    if opera.tags.length > 0 && tag_list
+      ul(class="detailList")
+        each tag in tag_list
+          - if (opera.tags.includes(tag._id))
+            li 
+              a(href=tag.url) #{tag.name}
+    a(class="detailSubHeader" href="/update"+opera.url) + Add a tag 
+    h2.detailSubHeader Arias from this opera: 
+    if aria_list 
+      ul(class="detailList")
+        each aria in aria_list 
           li 
-            a(href=tag.url) #{tag.name}
-  a(href="/create/tag") Add new tag  
-  h2 Arias from this opera 
-  if aria_list 
-    ul 
-      each aria in aria_list 
-        li 
-          a(href= aria.url) #{aria.name}
-  a(href="/create/aria") Add Aria 
-  hr
-  a(href="/update"+opera.url) Update this opera 
-  a(href="/delete"+opera.url) Delete this Opera 
-
-
-
-
+            a(href= aria.url) #{aria.name}
+    a(class="detailSubHeader" href="/create/aria") + Add new aria 

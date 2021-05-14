@@ -1,22 +1,28 @@
 extends layout
 
 block content
-  h1= composer.fullname
+  .detailContainer
+    .detailHeader
+      h1.detailName= composer.fullname
+      .detailEditButtons
+        a(href="/update"+composer.url) 
+          img(class="editButton" src="/images/edit.png", alt="Edit this composer") 
+        a(href="/delete"+composer.url)
+          img(class="editButton" src="/images/trash.png", alt="Delete this composer") 
+    if composer.birth_date && composer.death_date
+      p.detailSubSection= composer.birth_date_local + ' - ' + composer.death_date_local
+    else if composer.birth_date
+      p.detailSubSection= 'Born: ' + composer.birth_date_local
+    else if composer.death_date 
+      p.detailSubSection= 'Died: ' + composer.death_date_local
 
-  if composer.birth_date && composer.death_date
-    p= composer.birth_date_local + ' - ' + composer.death_date_local
-  else if composer.birth_date
-    p= 'Born: ' + composer.birth_date_local
-  else if composer.death_date 
-    p= 'Died: ' + composer.death_date_local
-
-  h2 Operas:
-  if opera_list 
-    ul 
-      each opera in opera_list 
-        li 
-          a(href= opera.url) #{opera.name} 
-  a(href="/create/opera") Add opera
-  hr
-  a(href="/update"+composer.url) Update this composer 
-  a(href="/delete"+composer.url) Delete this composer 
+    if composer.bio 
+      h2.detailSubHeader Biography:
+      p.detailSubSection= composer.bio
+    h2.detailSubHeader Operas:
+    if opera_list 
+      ul(class="detailList") 
+        each opera in opera_list 
+          li 
+            a(href= opera.url) #{opera.name}
+    a(class="detailSubHeader" href="/create/opera") + Add new opera 
