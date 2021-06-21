@@ -1,6 +1,7 @@
 var express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const unescape = require('./unescape');
 const sort = require('./sort');
 
 const Aria = require('../models/ariaSchema');
@@ -122,13 +123,13 @@ exports.create_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage("Please add an aria name")
-      .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+      .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage("Aria name must only include alphanumeric characters"),
 
     body('nickname')
     .trim()
     .optional({checkFalsy: true})
-    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape()
       .withMessage("Aria nickname must include only alphanumeric characters"),
 
@@ -141,7 +142,7 @@ exports.create_post = [
     body('character_name')
     .trim()
     .optional({checkFalsy: true})
-    .matches(/^[À-ÿa-z0-9 '-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape()
       .withMessage("Character name must include only alphanumeric characters"),
 
@@ -163,21 +164,39 @@ exports.create_post = [
     .trim()
     .optional({checkFalsy: true})
     .escape()
-    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage("Language must include only alphabet characters"),
 
     body('voice_type')
     .trim()
     .optional({checkFalsy: true})
     .escape()
-    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage("Voice type must include only alphanumeric characters"),
 
     body('description')
     .trim()
     .optional({checkFalsy: true})
-    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
 
     // Now, process validated and sanitized form inputs
     (req, res, next) => {
@@ -298,13 +317,13 @@ exports.update_post = [
   .isLength({ min: 1 })
   .escape()
     .withMessage("Please add an aria name")
-    .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .withMessage("Aria name must only include alphanumeric characters"),
 
   body('nickname')
   .trim()
   .optional({checkFalsy: true})
-  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+  .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .withMessage("Aria nickname must include only alphanumeric characters"),
 
   body('opera')
@@ -316,7 +335,7 @@ exports.update_post = [
   body('character_name')
   .trim()
   .optional({checkFalsy: true})
-  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+  .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
   .escape()
     .withMessage("Character name must include only alphanumeric characters"),
 
@@ -338,21 +357,39 @@ exports.update_post = [
   .trim()
   .optional({checkFalsy: true})
   .escape()
-  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+  .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .withMessage("Language must include only alphabet characters"),
 
   body('voice_type')
   .trim()
   .optional({checkFalsy: true})
   .escape()
-  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+  .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .withMessage("Voice type must include only alphanumeric characters"),
 
   body('description')
   .trim()
   .optional({checkFalsy: true})
-  .matches(/^[À-ÿa-z0-9 _.,!"'-]+$/i)
+  .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
   .escape(),
+
+  // Replace escaped HTML entities with characters
+  unescape('&#38;', '&'),
+  unescape('&#x26;', '&'),
+  unescape('&amp;', '&'),
+
+  unescape('&#34;', '"'),
+  unescape('&ldquo;', '"'),
+  unescape('&rdquo;', '"'),
+  unescape('&#8220; ', '"'),
+  unescape('&#8221;', '"'),
+
+  unescape('&#39;', "'"),
+  unescape('&#x27;', "'"),
+  unescape('&lsquo;', "'"),
+  unescape('&rsquo;', "'"),
+  unescape('&#8216;', "'"),
+  unescape('&#8217;', "'"),
 
   // Now, process validated and sanitized form inputs
   (req, res, next) => {

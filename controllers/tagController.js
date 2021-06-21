@@ -1,6 +1,7 @@
 const express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const unescape = require("./unescape");
 const sort = require('./sort');
 
 const Aria = require('../models/ariaSchema');
@@ -66,7 +67,7 @@ exports.create_post = [
     body('description')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
 
     // Process request after validation and sanitization.
@@ -182,8 +183,26 @@ exports.update_post = [
     body('description')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
 
     // Process request after validation and sanitization.
     (req, res, next) => {

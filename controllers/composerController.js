@@ -1,6 +1,7 @@
 var express = require('express');
 const async = require('async');
 const { body, validationResult } = require('express-validator');
+const unescape = require('./unescape');
 const sort = require('./sort');
 
 const Composer = require('../models/composerSchema');
@@ -60,14 +61,14 @@ exports.create_post = [
       .isLength({ min: 1 })
       .escape()
         .withMessage('First name must be specified.')
-      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+        .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
         .withMessage('First name must include only alphanumeric characters.'),
     body('last_name')
       .trim()
       .isLength({ min: 1 })
       .escape()
         .withMessage('Last name must be specified.')
-      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+        .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
         .withMessage('Last name must include only alphanumeric characters.'),
     body('birth_date', 'Invalid date of birth')
       .optional({ checkFalsy: true })
@@ -79,6 +80,24 @@ exports.create_post = [
       .toDate(), 
     body('bio')
         .escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -172,14 +191,14 @@ exports.update_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage('First name must be specified.')
-    .isAlphanumeric()
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage('First name must include only alphanumeric characters.'),
     body('last_name')
      .trim()
      .isLength({ min: 1 })
      .escape()
        .withMessage('Last name must be specified.')
-     .isAlphanumeric()
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
        .withMessage('Last name must include only alphanumeric characters.'),
     body('birth_date', 'Invalid date of birth')
      .optional({ checkFalsy: true })
@@ -191,6 +210,24 @@ exports.update_post = [
      .toDate(), 
     body('bio')
         .escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
 
    // Process request after validation and sanitization.
    (req, res, next) => {

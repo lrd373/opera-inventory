@@ -94,7 +94,7 @@ exports.create_post = [
     .isLength({min: 1})
     .escape()
       .withMessage("Please enter opera name")
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage("Opera name must include only alphanumeric characters and spaces"),
     
     body('composer')
@@ -112,7 +112,7 @@ exports.create_post = [
     body('language')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape()
       .withMessage("Language must include only alphanumeric characters"),
     
@@ -126,10 +126,28 @@ exports.create_post = [
     body('synopsis')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
     
     body('tags.*').escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
 
     (req, res, next) => {
         const errors = validationResult(req);
@@ -280,7 +298,7 @@ exports.update_post = [
     .isLength({ min: 1 })
     .escape()
       .withMessage('Opera name must be specified.')
-      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+      .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
       .withMessage('Name must include only alphanumeric characters.'),
     
     body('composer')
@@ -297,7 +315,7 @@ exports.update_post = [
     body('language', 'Invalid language, must include only alphabet characters')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi)
     .escape(),
 
     body('number_of_acts', 'Invalid, please include only numbers')
@@ -309,9 +327,27 @@ exports.update_post = [
     body('synopsis', 'Invalid synopsis, please try again')
     .trim()
     .optional({ checkFalsy: true })
-    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi),
+    .matches(/[À-ÿa-z0-9 .,!"'-]|\r\n|\r|\n/gmi),
 
     body('tags.*').escape(),
+
+    // Replace escaped HTML entities with characters
+    unescape('&#38;', '&'),
+    unescape('&#x26;', '&'),
+    unescape('&amp;', '&'),
+
+    unescape('&#34;', '"'),
+    unescape('&ldquo;', '"'),
+    unescape('&rdquo;', '"'),
+    unescape('&#8220; ', '"'),
+    unescape('&#8221;', '"'),
+
+    unescape('&#39;', "'"),
+    unescape('&#x27;', "'"),
+    unescape('&lsquo;', "'"),
+    unescape('&rsquo;', "'"),
+    unescape('&#8216;', "'"),
+    unescape('&#8217;', "'"),
     
 
    // Process request after validation and sanitization.
