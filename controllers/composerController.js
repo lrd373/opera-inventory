@@ -60,14 +60,14 @@ exports.create_post = [
       .isLength({ min: 1 })
       .escape()
         .withMessage('First name must be specified.')
-      .isAlphanumeric()
+      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
         .withMessage('First name must include only alphanumeric characters.'),
     body('last_name')
       .trim()
       .isLength({ min: 1 })
       .escape()
         .withMessage('Last name must be specified.')
-      .isAlphanumeric()
+      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
         .withMessage('Last name must include only alphanumeric characters.'),
     body('birth_date', 'Invalid date of birth')
       .optional({ checkFalsy: true })

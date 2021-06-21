@@ -64,8 +64,10 @@ exports.create_post = [
       .escape()
         .withMessage('Tag name must be specified.'),
     body('description')
-      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
-      .escape(),
+    .trim()
+    .optional({ checkFalsy: true })
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
@@ -178,8 +180,10 @@ exports.update_post = [
       .escape()
         .withMessage('Tag name must be specified.'),
     body('description')
-      .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
-      .escape(),
+    .trim()
+    .optional({ checkFalsy: true })
+    .matches(/[À-ÿa-z0-9 _.,!"'-]|\r\n|\r|\n/gmi)
+    .escape(),
 
     // Process request after validation and sanitization.
     (req, res, next) => {
